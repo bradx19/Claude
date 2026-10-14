@@ -1,0 +1,443 @@
+<title>Visionox Client Engine</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one working column — status strip on top, then pipeline, outreach kit, recap writer. Smoky Mountain palette: spruce, slate, ridge-haze, ember. */
+:root {
+  --bg: #f3f5f2;
+  --surface: #ffffff;
+  --ink: #18231e;
+  --muted: #5b6a62;
+  --line: #d6ddd7;
+  --spruce: #1f5b47;
+  --spruce-soft: #e1ede7;
+  --ember: #b8561f;
+  --ember-soft: #f8e7dc;
+  --good: #23784f;
+  --warn: #a86a00;
+  --bad: #b23a3a;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111814; --surface: #18221d; --ink: #e6ede8; --muted: #9aaba1; --line: #2c3a33;
+    --spruce: #6cc39c; --spruce-soft: #1d3329; --ember: #f0925a; --ember-soft: #3a2519;
+    --good: #5fcf94; --warn: #e5b04a; --bad: #f08585; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111814; --surface: #18221d; --ink: #e6ede8; --muted: #9aaba1; --line: #2c3a33;
+  --spruce: #6cc39c; --spruce-soft: #1d3329; --ember: #f0925a; --ember-soft: #3a2519;
+  --good: #5fcf94; --warn: #e5b04a; --bad: #f08585; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 64px; display: grid; gap: 36px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(1.7rem, 4vw, 2.3rem); }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.02rem; }
+.eyebrow { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.sub { color: var(--muted); margin: 6px 0 0; max-width: 62ch; }
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+section { display: grid; gap: 14px; }
+.sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+
+/* status strip */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; display: grid; gap: 4px; align-content: start; }
+.stat .big { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; line-height: 1.1; }
+.stat .big small { font-size: .95rem; color: var(--muted); font-weight: 600; }
+.stat .note { color: var(--muted); font-size: .88rem; }
+.bar { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; margin-top: 4px; }
+.bar > i { display: block; height: 100%; background: var(--spruce); border-radius: 3px; transition: width .3s; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; width: fit-content; }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.pill.good { color: var(--good); background: color-mix(in srgb, var(--good) 14%, transparent); }
+.pill.warn { color: var(--warn); background: color-mix(in srgb, var(--warn) 14%, transparent); }
+.pill.bad { color: var(--bad); background: color-mix(in srgb, var(--bad) 14%, transparent); }
+.pill.idle { color: var(--muted); background: color-mix(in srgb, var(--muted) 14%, transparent); }
+
+/* controls */
+input, select, textarea, button { font: inherit; color: inherit; }
+input, select, textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; width: 100%; min-width: 0; }
+textarea { resize: vertical; min-height: 140px; line-height: 1.45; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--spruce); outline-offset: 1px; }
+label { display: grid; gap: 4px; font-size: .85rem; font-weight: 600; color: var(--muted); }
+button { cursor: pointer; border-radius: 8px; padding: 8px 14px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); }
+button.primary { background: var(--spruce); border-color: var(--spruce); color: var(--surface); }
+button.ghost { border-color: transparent; background: transparent; color: var(--muted); padding: 6px 8px; }
+button:disabled { opacity: .55; cursor: default; }
+
+/* pipeline */
+.add-lead { display: grid; grid-template-columns: 1.1fr 1.6fr auto; gap: 10px; align-items: end; }
+.leads { display: grid; gap: 8px; }
+.lead { display: grid; grid-template-columns: minmax(0, 1.2fr) 190px minmax(0, 1.6fr) auto; gap: 10px; align-items: center; padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--stage, var(--line)); border-radius: var(--radius); }
+.lead .who { min-width: 0; }
+.lead .who b { display: block; }
+.lead .who span { color: var(--muted); font-size: .88rem; overflow-wrap: anywhere; }
+.lead .del-confirm { display: flex; gap: 6px; align-items: center; font-size: .85rem; }
+.empty { color: var(--muted); padding: 18px; text-align: center; border: 1px dashed var(--line); border-radius: var(--radius); }
+.stage-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .82rem; color: var(--muted); }
+.stage-legend span { display: inline-flex; gap: 6px; align-items: center; }
+.stage-legend i { width: 10px; height: 10px; border-radius: 2px; background: var(--c); display: inline-block; }
+
+/* outreach */
+.kit { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 14px; }
+.kit-list { display: grid; gap: 6px; align-content: start; }
+.kit-list button { text-align: left; font-weight: 600; background: transparent; }
+.kit-list button[aria-pressed="true"] { background: var(--spruce-soft); border-color: var(--spruce); color: var(--spruce); }
+.kit-body { display: grid; gap: 10px; min-width: 0; }
+.kit-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
+.kit-row label { flex: 1 1 200px; }
+.msg { white-space: pre-wrap; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 14px; margin: 0; font-family: var(--font-body); overflow-wrap: anywhere; }
+.when { font-size: .88rem; color: var(--muted); }
+
+/* recap */
+.recap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+.recap-form { display: grid; gap: 10px; }
+.recap-form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.out { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.out .msg { min-height: 220px; }
+.hint { font-size: .85rem; color: var(--muted); }
+.toast { font-size: .85rem; color: var(--good); font-weight: 600; min-height: 1.2em; }
+.err { color: var(--bad); }
+
+@media (max-width: 760px) {
+  .add-lead { grid-template-columns: 1fr; }
+  .lead { grid-template-columns: minmax(0, 1fr) auto; }
+  .lead select, .lead .next { grid-column: 1 / -1; }
+  .lead .actions { grid-row: 1; grid-column: 2; }
+  .kit, .recap { grid-template-columns: 1fr; }
+  .kit-list { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .recap-form .row { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Visionox · AI coaching launch</div>
+    <h1>Client Engine</h1>
+    <p class="sub">Your pipeline, your kill test and your scripts in one place. Day <span class="num" id="dayNum">1</span> of the 14-day launch.</p>
+  </header>
+
+  <section aria-labelledby="status-h">
+    <h2 id="status-h" class="eyebrow">Where you stand</h2>
+    <div class="stats">
+      <div class="stat">
+        <span class="eyebrow">Founding spots left</span>
+        <span class="big num" id="spotsLeft">5 <small>of 5</small></span>
+        <div class="bar"><i id="spotsBar" style="width:0%"></i></div>
+        <span class="note" id="spotsNote">$50 a session. Ends at client #5 or Nov 30.</span>
+      </div>
+      <div class="stat">
+        <span class="eyebrow">Day 7 kill test</span>
+        <span id="d7pill" class="pill idle">Not started</span>
+        <span class="note" id="d7note">Pass: 5 founding clients, or 3 plus Jared's team session.</span>
+      </div>
+      <div class="stat">
+        <span class="eyebrow">Intro calls that buy</span>
+        <span class="big num" id="closeRate">–</span>
+        <span class="note" id="closeNote">Under 2 in 10: fix the pitch. 3+ in 10: the offer works.</span>
+      </div>
+      <div class="stat">
+        <span class="eyebrow">Messages sent today</span>
+        <span class="big num" id="sentToday">0 <small>/ 15</small></span>
+        <div class="bar"><i id="sentBar" style="width:0%"></i></div>
+        <span class="note">Set a lead to "Messaged" to count it.</span>
+      </div>
+      <div class="stat">
+        <span class="eyebrow">Revenue booked</span>
+        <span class="big num" id="revenue">$0</span>
+        <span class="note" id="revNote">Founding $400 · full $1,200 · team $500</span>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="pipe-h">
+    <div class="sec-head">
+      <div>
+        <h2 id="pipe-h">Pipeline</h2>
+        <p class="sub">Everyone you're talking to. Change a stage and the numbers above update.</p>
+      </div>
+      <div class="stage-legend" id="legend"></div>
+    </div>
+    <form class="add-lead panel" id="addForm">
+      <label>Name <input id="newName" required placeholder="e.g. Sam Carter" autocomplete="off"></label>
+      <label>Who they are / how you know them <input id="newNote" placeholder="e.g. Church friend, runs a cleaning business" autocomplete="off"></label>
+      <button class="primary" type="submit" id="addBtn">Add lead</button>
+    </form>
+    <div class="leads" id="leads">
+      <div class="empty" id="leadsEmpty">Loading your pipeline…</div>
+    </div>
+  </section>
+
+  <section aria-labelledby="kit-h">
+    <div>
+      <h2 id="kit-h">Outreach kit</h2>
+      <p class="sub">Pick a message, pick who it's for, copy, send from your phone. Edit freely so it sounds like you.</p>
+    </div>
+    <div class="kit panel">
+      <div class="kit-list" id="kitList" role="group" aria-label="Messages"></div>
+      <div class="kit-body">
+        <div class="kit-row">
+          <label>For <select id="kitWho"></select></label>
+          <button class="primary" id="kitCopy" type="button">Copy message</button>
+        </div>
+        <div class="when" id="kitWhen"></div>
+        <pre class="msg" id="kitMsg"></pre>
+        <div class="toast" id="kitToast" role="status"></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="recap-h">
+    <div>
+      <h2 id="recap-h">Recap writer</h2>
+      <p class="sub">Paste a call transcript or your rough notes. Claude drafts the recap email you send within 24 hours.</p>
+    </div>
+    <div class="recap panel">
+      <form class="recap-form" id="recapForm">
+        <div class="row">
+          <label>Kind of call
+            <select id="recapKind">
+              <option value="session">Weekly session</option>
+              <option value="intro">Free intro call</option>
+              <option value="team">Team session</option>
+            </select>
+          </label>
+          <label>Client <input id="recapWho" placeholder="First name" autocomplete="off"></label>
+        </div>
+        <label id="weekWrap">Program week
+          <select id="recapWeek"></select>
+        </label>
+        <label>Transcript or notes
+          <textarea id="recapNotes" placeholder="Paste the transcript, or quick notes: what you covered, the win they reported, the assignment, anything you promised to follow up on."></textarea>
+        </label>
+        <button class="primary" type="submit" id="recapBtn">Draft the recap</button>
+        <p class="hint" id="recapHint">Uses Claude from inside this page. The first time, it asks your permission.</p>
+      </form>
+      <div class="out">
+        <div class="sec-head"><h3>Draft</h3><button type="button" id="recapCopy" disabled>Copy email</button></div>
+        <pre class="msg" id="recapOut">Your draft shows up here. Read it before you send it.</pre>
+        <div class="toast" id="recapToast" role="status"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const START = new Date(2026, 9, 14); // Oct 14, 2026 = day 1
+  const FOUNDING_END = new Date(2026, 10, 30, 23, 59);
+  const STAGES = [
+    { id: "todo", label: "To contact", c: "var(--line)" },
+    { id: "messaged", label: "Messaged", c: "var(--muted)" },
+    { id: "intro", label: "Intro booked", c: "var(--warn)" },
+    { id: "thinking", label: "Thinking", c: "var(--ember)" },
+    { id: "founding", label: "Founding client", c: "var(--good)" },
+    { id: "full", label: "Full-price client", c: "var(--spruce)" },
+    { id: "team", label: "Team session booked", c: "var(--spruce)" },
+    { id: "nofit", label: "Not a fit", c: "var(--bad)" },
+  ];
+  const stageById = Object.fromEntries(STAGES.map(s => [s.id, s]));
+  const $ = id => document.getElementById(id);
+  const today = new Date();
+  const dayKey = d => d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+  $("dayNum").textContent = Math.max(1, Math.floor((today - START) / 864e5) + 1);
+
+  $("legend").innerHTML = STAGES.map(s => `<span><i style="--c:${s.c}"></i>${s.label}</span>`).join("");
+
+  let leads = [];
+  let db = null;
+  let confirmId = null;
+
+  function esc(s) { return String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+  function firstName(n) { return (n || "").trim().split(/\s+/)[0] || "there"; }
+
+  function renderStats() {
+    const n = st => leads.filter(l => l.stage === st).length;
+    const founding = n("founding"), full = n("full"), team = n("team");
+    const left = Math.max(0, 5 - founding);
+    const closed = today > FOUNDING_END;
+    $("spotsLeft").innerHTML = `${closed ? 0 : left} <small>of 5</small>`;
+    $("spotsBar").style.width = Math.min(100, founding / 5 * 100) + "%";
+    $("spotsNote").textContent = closed ? "Founding rate closed on Nov 30. Full prices now." :
+      left === 0 ? "All 5 filled. Full price from here: $1,200." : "$50 a session. Ends at client #5 or Nov 30.";
+
+    const day = Math.floor((today - START) / 864e5) + 1;
+    const pass = founding >= 5 || (founding >= 3 && team >= 1);
+    const pill = $("d7pill");
+    if (pass) { pill.className = "pill good"; pill.textContent = "Passed"; }
+    else if (day > 7) { pill.className = "pill bad"; pill.textContent = "Missed. Fix the message, not the idea."; }
+    else if (founding + team > 0) { pill.className = "pill warn"; pill.textContent = `${founding} founding${team ? " + team session" : ""}, ${Math.max(0, 7 - day + 1)} days left`; }
+    else { pill.className = "pill idle"; pill.textContent = `${Math.max(0, 7 - day + 1)} days left`; }
+
+    const decided = leads.filter(l => ["thinking", "founding", "full", "nofit"].includes(l.stage)).length;
+    const bought = founding + full;
+    $("closeRate").innerHTML = decided ? `${bought}<small> of ${decided}</small>` : "–";
+    $("closeNote").textContent = decided < 5 ? "Needs about 5 finished intro calls before it means much." :
+      bought / decided >= .3 ? "3+ in 10. The offer works." : bought / decided < .2 ? "Under 2 in 10. Fix the pitch or who you're asking." : "In between. Keep going and watch it.";
+
+    const sent = leads.filter(l => l.messagedOn === dayKey(today)).length;
+    $("sentToday").innerHTML = `${sent} <small>/ 15</small>`;
+    $("sentBar").style.width = Math.min(100, sent / 15 * 100) + "%";
+
+    const rev = founding * 400 + full * 1200 + team * 500;
+    $("revenue").textContent = "$" + rev.toLocaleString("en-US");
+  }
+
+  function renderLeads() {
+    const box = $("leads");
+    if (!leads.length) {
+      box.innerHTML = `<div class="empty">${db ? "No leads yet. Add the first person you'll text today, Jennifer first." : "The pipeline saves only when this page is open on claude.ai. Everything else on the page still works."}</div>`;
+      return;
+    }
+    const order = Object.fromEntries(STAGES.map((s, i) => [s.id, i]));
+    const sorted = [...leads].sort((a, b) => (order[a.stage] - order[b.stage]) || String(a.name).localeCompare(b.name));
+    box.innerHTML = sorted.map(l => `
+      <div class="lead" style="--stage:${stageById[l.stage]?.c || "var(--line)"}" data-id="${esc(l.id)}">
+        <div class="who"><b>${esc(l.name)}</b><span>${esc(l.note)}</span></div>
+        <select data-f="stage" aria-label="Stage for ${esc(l.name)}">${STAGES.map(s => `<option value="${s.id}" ${s.id === l.stage ? "selected" : ""}>${s.label}</option>`).join("")}</select>
+        <input class="next" data-f="next" value="${esc(l.next)}" placeholder="Next step" aria-label="Next step for ${esc(l.name)}">
+        <div class="actions">${confirmId === l.id
+          ? `<span class="del-confirm">Remove? <button type="button" class="ghost err" data-act="yes">Yes</button><button type="button" class="ghost" data-act="no">No</button></span>`
+          : `<button type="button" class="ghost" data-act="del" aria-label="Remove ${esc(l.name)}">Remove</button>`}</div>
+      </div>`).join("");
+  }
+
+  function render() { renderStats(); renderLeads(); fillWho(); }
+
+  $("leads").addEventListener("change", async e => {
+    const row = e.target.closest(".lead"); if (!row || !db) return;
+    const f = e.target.dataset.f; if (!f) return;
+    const patch = { [f]: e.target.value, updatedAt: Date.now() };
+    if (f === "stage" && e.target.value === "messaged") patch.messagedOn = dayKey(new Date());
+    try { await db.collection("leads").doc(row.dataset.id).update(patch); } catch (err) { console.error(err); }
+  });
+  $("leads").addEventListener("click", async e => {
+    const act = e.target.dataset.act; if (!act) return;
+    const id = e.target.closest(".lead").dataset.id;
+    if (act === "del") { confirmId = id; renderLeads(); }
+    else if (act === "no") { confirmId = null; renderLeads(); }
+    else if (act === "yes" && db) { confirmId = null; try { await db.collection("leads").doc(id).delete(); } catch (err) { console.error(err); } }
+  });
+  $("addForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const name = $("newName").value.trim(); if (!name || !db) return;
+    $("addBtn").disabled = true;
+    try {
+      await db.collection("leads").add({ name, note: $("newNote").value.trim(), stage: "todo", next: "", updatedAt: Date.now() });
+      $("newName").value = ""; $("newNote").value = ""; $("newName").focus();
+    } catch (err) { console.error(err); }
+    $("addBtn").disabled = false;
+  });
+
+  /* ---------- outreach kit ---------- */
+  const KIT = [
+    { id: "warm", title: "Warm text (your 20)", when: "Day 2. Send to 20 people who already know you. Personal beats polished.",
+      body: n => `Hey ${n}! Quick one. I've started teaching people to use AI on their actual work: emails, documents, research, the stuff that eats the week.\n\nI'm taking 5 founding clients for my 8-week 1-on-1 program at $50 a session (it'll be $1,200 after that). In return I just ask for honest feedback.\n\nWant a free 30-minute call? I'll show you one thing on your own work and you can decide from there. No pressure either way.` },
+    { id: "jennifer", title: "Jennifer", when: "Send first. She already asked about AI for blogs and documents.",
+      body: n => `Hi ${n}! You asked me a while back about using AI for blogs and documents. I've turned that into an 8-week 1-on-1 program, and you're the first person I thought of.\n\nI'm taking 5 founding clients at $50 a session. We'd work on your real writing from week 1, so you'd leave with your own system, not a pile of tips.\n\nCould we grab 30 minutes this week? I'll show you how I'd cut one of your blog posts down to a fraction of the time.` },
+    { id: "jared", title: "Jared lunch pitch", when: "Say it at lunch (any day from Tue Oct 20). Then stop talking.",
+      body: n => `"I teach teams to use AI on their actual work: listings, past-client emails, market updates. One hour at your team meeting, every agent leaves using it, and you get a cheat sheet built for your team. It's $500. Want to put it on the calendar?"` },
+    { id: "follow", title: "3-day follow-up", when: "Once, 3 days after a \"thinking\" intro call. Then let it go.",
+      body: n => `Hey ${n}, just following up on our call. No pressure at all. If the 8 weeks still sounds useful, I've got a founding spot open and could start you next week. If now's not the time, totally fine, and the [quick win] we did is yours to keep using.` },
+    { id: "agents", title: "Agent after team session", when: "Within 48 hours, to every agent who showed interest.",
+      body: n => `Hi ${n}, great having you in the session with Jared's team! If you want to go deeper on your own business, I'm running an 8-week 1-on-1 program and have a couple of founding spots left at $50 a session. Want to grab 30 minutes and look at your week together?` },
+    { id: "referral", title: "Referral ask (week 4 or 8)", when: "At the week 4 checkpoint and again at week 8.",
+      body: n => `${n}, you've made real progress. Quick ask: who's one person you know who's buried in the same kind of work? If you pass along my number, I'll give them the same free 30-minute intro.` },
+  ];
+  let kitId = "warm";
+  function fillWho() {
+    const sel = $("kitWho"), cur = sel.value;
+    const opts = [`<option value="">(no name)</option>`].concat(leads.map(l => `<option value="${esc(l.id)}">${esc(l.name)}</option>`));
+    sel.innerHTML = opts.join("");
+    if ([...sel.options].some(o => o.value === cur)) sel.value = cur;
+    renderKit();
+  }
+  function renderKit() {
+    const item = KIT.find(k => k.id === kitId);
+    const lead = leads.find(l => l.id === $("kitWho").value);
+    $("kitList").innerHTML = KIT.map(k => `<button type="button" data-k="${k.id}" aria-pressed="${k.id === kitId}">${k.title}</button>`).join("");
+    $("kitWhen").textContent = item.when;
+    $("kitMsg").textContent = item.body(lead ? firstName(lead.name) : "[name]");
+  }
+  $("kitList").addEventListener("click", e => { const k = e.target.dataset.k; if (k) { kitId = k; renderKit(); $("kitToast").textContent = ""; } });
+  $("kitWho").addEventListener("change", renderKit);
+
+  async function copyText(text, toastEl, srcEl) {
+    try { await navigator.clipboard.writeText(text); toastEl.textContent = "Copied."; }
+    catch {
+      const r = document.createRange(); r.selectNodeContents(srcEl);
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      toastEl.textContent = "Selected. Press copy on your keyboard or phone.";
+    }
+    setTimeout(() => { toastEl.textContent = ""; }, 3000);
+  }
+  $("kitCopy").addEventListener("click", () => copyText($("kitMsg").textContent, $("kitToast"), $("kitMsg")));
+
+  /* ---------- recap writer ---------- */
+  const WEEKS = ["Foundation: goals, baseline, account setup, privacy rules", "Foundation: prompting on their real tasks", "Daily work: writing, email and documents", "Daily work: custom assistants (midpoint check)", "Leverage: research, analysis and comparisons", "Leverage: scheduled tasks and simple automations", "Advanced: skills, agents and tools for their field", "Advanced: their personal AI system, results review"];
+  $("recapWeek").innerHTML = WEEKS.map((w, i) => `<option value="${i + 1}">Week ${i + 1} · ${w}</option>`).join("");
+  $("recapKind").addEventListener("change", () => { $("weekWrap").hidden = $("recapKind").value !== "session"; });
+
+  let sample = null, controller = null;
+  function buildPrompt() {
+    const kind = $("recapKind").value, who = $("recapWho").value.trim() || "the client";
+    const notes = $("recapNotes").value.trim();
+    const base = `You are drafting an email for Brad, who runs Visionox and coaches people to use AI on their own real work. Write in Brad's voice: warm, plain adult language, short sentences, no hype, no emoji, no em-dashes. Use only facts found in the notes; where something needed is missing, write a clearly marked [placeholder]. Output only the email: a subject line starting "Subject:", a blank line, then the body, signed "Brad".`;
+    const spec = kind === "intro"
+      ? `This is the recap after a free 30-minute intro call with ${who}. Include, in this order: their goal in their words; the quick win you did together on their real work (so they can repeat it); the recommended plan (the 8-week 1-on-1 program, $1,200, or $50 a session if they are one of the 5 founding clients, while spots last and no later than Nov 30, 2026); and one clear next step with a [booking link] placeholder. If the notes say they are not a fit, instead thank them and point them to a free place to start.`
+      : kind === "team"
+      ? `This is the thank-you recap after a 60-minute team AI session for ${who}'s team. Include: the 3 tasks covered, one line each on how to repeat them; a reminder of the rules (fair housing, no client personal info in AI tools, review before sending); a note that the cheat sheet is attached [attach cheat sheet]; and a light mention that agents who want to go deeper can book a free 30-minute intro for the 8-week 1-on-1 program.`
+      : `This is the weekly recap after week ${$("recapWeek").value} of 8 of ${who}'s 1-on-1 program (week focus: ${WEEKS[$("recapWeek").value - 1]}). Include, in this order: the win they reported and hours saved, if mentioned; what you covered today, as 2 to 4 short bullets; this week's assignment on their real work, doable in 30 minutes or less, with steps; any links or prompts mentioned; and the next session time if mentioned, else [next session time]. Keep it under 250 words.`;
+    return `${base}\n\n${spec}\n\nNotes or transcript:\n"""\n${notes}\n"""`;
+  }
+  $("recapForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    if (!$("recapNotes").value.trim()) { $("recapHint").textContent = "Paste a transcript or a few notes first."; $("recapHint").className = "hint err"; return; }
+    $("recapHint").className = "hint";
+    if (!sample) { $("recapHint").textContent = "The recap writer works when this page is open on claude.ai."; return; }
+    controller?.abort(); controller = new AbortController();
+    $("recapBtn").disabled = true; $("recapCopy").disabled = true;
+    $("recapOut").textContent = "Thinking…";
+    try {
+      const res = await sample(buildPrompt(), { signal: controller.signal, cache: false, onText: ({ text }) => { $("recapOut").textContent = text; } });
+      $("recapOut").textContent = res.text;
+      $("recapCopy").disabled = false;
+      $("recapHint").textContent = "Read it, fix any [placeholder], then send.";
+    } catch (err) {
+      if (err?.text) $("recapOut").textContent = err.text;
+      const msg = { not_granted: "Claude access wasn't allowed for this page. Reload and allow it to use the recap writer.", rate_limited: "Too many drafts in a row. Wait a minute and try again.", cancelled: "Stopped." }[err?.code];
+      $("recapHint").textContent = msg || "The draft didn't finish. Try again in a moment.";
+      $("recapHint").className = "hint err";
+    }
+    $("recapBtn").disabled = false;
+  });
+  $("recapCopy").addEventListener("click", () => copyText($("recapOut").textContent, $("recapToast"), $("recapOut")));
+
+  /* ---------- boot ---------- */
+  render();
+  (async () => {
+    if (!window.claude?.use) { renderLeads(); return; }
+    claude.use("sample").then(s => { sample = s; if (!s) $("recapHint").textContent = "The recap writer works when this page is open on claude.ai."; });
+    db = await claude.use("db");
+    if (!db) { renderLeads(); return; }
+    db.collection("leads").onSnapshot(snap => {
+      leads = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      render();
+    }, err => { console.error(err); $("leads").innerHTML = `<div class="empty err">Couldn't load your pipeline. Reload the page to try again.</div>`; });
+  })();
+})();
+</script>
