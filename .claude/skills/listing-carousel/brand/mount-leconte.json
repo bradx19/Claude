@@ -1,0 +1,15 @@
+{
+  "team": "The Mount LeConte Team",
+  "agents": ["Jared Drager", "Emili Spangler", "Natalie Gribble"],
+  "colors": {
+    "gold": "#D4A84B",
+    "ink": "#0E1A2B",
+    "white": "#FFFFFF"
+  },
+  "font": "Inter",
+  "voice": "Warm, plain, local. Short headlines (under 8 words). Talk about how the place feels to live in or visit, not specs. No exclamation points, no 'nestled', 'boasts', 'stunning' or 'dream home'.",
+  "closing": {
+    "headline": "Want a closer look?",
+    "button": "Ask {agent} for details"
+  }
+}

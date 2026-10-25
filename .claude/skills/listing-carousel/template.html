@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    width: 1080px; height: 1350px; overflow: hidden; position: relative;
+    font-family: '{{font}}', 'DejaVu Sans', sans-serif; color: #fff;
+    background: {{ink}} url('{{photo}}') center / cover no-repeat;
+  }
+  /* Dark wash top and bottom so text stays readable on any photo */
+  .shade {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(14,26,43,.55) 0%, rgba(14,26,43,0) 22%),
+      linear-gradient(to top, rgba(14,26,43,.92) 0%, rgba(14,26,43,.75) 30%, rgba(14,26,43,0) 58%);
+  }
+  .team {
+    position: absolute; top: 64px; left: 72px;
+    font-size: 21px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  }
+  .team::after { content: ''; display: block; width: 88px; height: 5px; margin-top: 20px; background: {{gold}}; }
+  .copy { position: absolute; left: 72px; right: 72px; bottom: 150px; }
+  .eyebrow {
+    font-size: 22px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: {{gold}}; margin-bottom: 18px;
+  }
+  h1 { font-size: 66px; line-height: 1.08; font-weight: 800; letter-spacing: -.01em; max-width: 820px; }
+  .sub { font-size: 28px; line-height: 1.35; margin-top: 18px; opacity: .92; max-width: 820px; }
+  .button {
+    display: inline-block; margin-top: 30px; padding: 16px 26px;
+    border: 2px solid {{gold}}; font-size: 20px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+  }
+  .footer {
+    position: absolute; left: 72px; right: 72px; bottom: 56px;
+    border-top: 2px solid rgba(255,255,255,.85); padding-top: 22px;
+    display: flex; justify-content: space-between;
+    font-size: 20px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+  <div class="shade"></div>
+  <div class="team">{{team}}</div>
+  <div class="copy">
+    <div class="eyebrow">{{eyebrow}}</div>
+    <h1>{{headline}}</h1>
+    <div class="sub">{{sub}}</div>
+    {{button}}
+  </div>
+  <div class="footer"><span>{{footer}}</span><span>{{count}}</span></div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "brand": "mount-leconte",
+  "footer": "410 Big Bear Way • Unit 3002",
+  "slides": [
+    { "photo": "photos/IMG_4471.jpg", "eyebrow": "Pigeon Forge, Tennessee", "headline": "A condo with the mountains out front", "sub": "Unit 3002 at Big Bear Lodge." },
+    { "photo": "photos/IMG_4483.jpg", "eyebrow": "Inside the condo", "headline": "Room to gather by the fireplace", "sub": "Living and dining space that opens to the balcony." },
+    { "photo": "photos/IMG_4490.jpg", "eyebrow": "Step outside", "headline": "Coffee with a Smoky Mountain view", "sub": "A covered balcony looking out over the hills." },
+    { "photo": "photos/IMG_4502.jpg", "eyebrow": "Resort amenities", "headline": "The pool is a short walk down", "sub": "Shared outdoor pool at Big Bear Lodge." },
+    { "photo": "photos/IMG_4471.jpg", "eyebrow": "Big Bear Lodge • Unit 3002", "headline": "Want a closer look?", "sub": "Reach out for details or to set up a showing.", "button": "Ask Jared for details" }
+  ]
+}
