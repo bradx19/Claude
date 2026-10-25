@@ -1,0 +1,7 @@
+# Full photo set stays local (76 MB, photographer: Knox View Media). Only the slides in use are tracked.
+photos/*
+!photos/001.jpg
+!photos/001_Twilight.jpg
+!photos/014.jpg
+!photos/021.jpg
+!photos/IMG_0105.jpg

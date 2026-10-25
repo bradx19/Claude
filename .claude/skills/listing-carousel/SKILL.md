@@ -25,14 +25,15 @@ Output: `output/slide_1.png` … `slide_5.png` and `output/preview.png`, inside 
    - sub: one plain sentence that only says what the photo shows
    For the closing slide, use the brand's `closing` headline and button, with the listing agent's name.
    Fair housing: describe the property, never who should live there ("perfect for families" and similar are out).
-5. **Write `slides.json`** into the listing folder:
+5. **Write `slides.json`**. Photos are landscape and slides are tall, so each one gets cropped to its middle. If what the headline mentions is off to one side (a fireplace, a view), add `"focus": "20% center"` to that slide. Use 0% for the left edge and 100% for the right. Save it in the listing folder:
    ```json
    {
      "brand": "mount-leconte",
      "footer": "410 Big Bear Way • Unit 3002",
      "slides": [
-       { "photo": "photos/IMG_4471.jpg", "eyebrow": "...", "headline": "...", "sub": "..." },
-       { "photo": "photos/IMG_4471.jpg", "eyebrow": "...", "headline": "...", "sub": "...", "button": "..." }
+       { "photo": "photos/001.jpg", "eyebrow": "...", "headline": "...", "sub": "..." },
+       { "photo": "photos/014.jpg", "focus": "25% center", "eyebrow": "...", "headline": "...", "sub": "..." },
+       { "photo": "photos/001.jpg", "eyebrow": "...", "headline": "...", "sub": "...", "button": "..." }
      ]
    }
    ```

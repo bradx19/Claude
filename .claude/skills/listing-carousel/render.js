@@ -26,6 +26,7 @@ function slideHtml(slide, i, total) {
     .replaceAll('{{ink}}', brand.colors.ink)
     .replaceAll('{{font}}', brand.font)
     .replace('{{photo}}', `data:image/jpeg;base64,${photo}`)
+    .replace('{{focus}}', slide.focus || 'center')
     .replace('{{team}}', esc(brand.team))
     .replace('{{eyebrow}}', esc(slide.eyebrow))
     .replace('{{headline}}', esc(slide.headline))
