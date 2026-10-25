@@ -1,0 +1,325 @@
+<title>Team AI Program Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Hanken+Grotesk:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap">
+<style>
+/* Layout: one reading column per session, pinned session tabs, a run-of-show timeline in each.
+   Palette and type follow the Team AI Program overview: charcoal, cream, ochre gold, serif display. */
+:root {
+  --bg: #F5F0E6; --surface: #FFFDF8; --ink: #1E1E1E; --muted: #625D54; --line: #E2D9C6;
+  --band: #1E1E1E; --band-ink: #F5F0E6; --gold: #A87D27; --gold-soft: #F0E3C6;
+  --say: #EDE6D6; --tip: #E7EEE6; --tip-ink: #2C4A33; --warn: #8F3A1F; --warn-soft: #F6E2D8;
+  --serif: 'DM Serif Display', Georgia, serif; --sans: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161513; --surface: #201E1B; --ink: #EDE8DE; --muted: #ABA393; --line: #35312A;
+    --band: #0F0E0C; --band-ink: #F5F0E6; --gold: #D9AE55; --gold-soft: #3A3020;
+    --say: #2A2620; --tip: #1F2B22; --tip-ink: #B8D9BF; --warn: #F0A386; --warn-soft: #3A221A; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161513; --surface: #201E1B; --ink: #EDE8DE; --muted: #ABA393; --line: #35312A;
+  --band: #0F0E0C; --band-ink: #F5F0E6; --gold: #D9AE55; --gold-soft: #3A3020;
+  --say: #2A2620; --tip: #1F2B22; --tip-ink: #B8D9BF; --warn: #F0A386; --warn-soft: #3A221A; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 17px/1.6 var(--sans); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--band); }
+.wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.col { max-width: 800px; margin: 0 auto; }
+
+.hero { background: var(--band); color: var(--band-ink); }
+.hero .col { padding-block: 44px 34px; display: grid; gap: 12px; }
+.kicker { font: 700 13px/1 var(--sans); letter-spacing: .18em; text-transform: uppercase; color: #D9AE55; }
+.hero h1 { font: 400 clamp(36px, 6vw, 54px)/1.02 var(--serif); margin: 0; text-wrap: balance; }
+.hero p { margin: 0; color: #CFC8BA; max-width: 62ch; }
+
+nav.tabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
+.tabs .col { display: flex; gap: 6px; overflow-x: auto; padding-block: 10px; scrollbar-width: none; }
+.tabs a { flex: none; text-decoration: none; color: var(--muted); font: 700 14px/1 var(--sans); padding: 9px 13px; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
+.tabs a:hover, .tabs a:focus-visible { color: var(--ink); border-color: var(--gold); outline: none; }
+
+main .col { padding-block: 8px 80px; }
+section.part { padding-block: 44px 10px; border-bottom: 1px solid var(--line); scroll-margin-top: 66px; }
+.eyebrow { font: 700 13px/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
+h2 { font: 400 clamp(30px, 5vw, 40px)/1.08 var(--serif); margin: 10px 0 12px; text-wrap: balance; }
+h3 { font: 800 19px/1.3 var(--sans); margin: 30px 0 10px; }
+p, li { max-width: 68ch; }
+p { margin: 0 0 14px; }
+ul, ol { padding-left: 22px; margin: 0 0 16px; }
+li { margin-bottom: 7px; }
+.lead { font-size: 19px; }
+code { font: 600 .92em var(--sans); background: var(--gold-soft); padding: 1px 6px; border-radius: 4px; }
+
+.meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 6px 0 18px; }
+.meta > div { background: var(--surface); padding: 12px 14px; min-width: 0; }
+.meta b { display: block; font: 700 12px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.meta span { font-size: 15.5px; }
+@media (max-width: 620px) { .meta { grid-template-columns: 1fr; } }
+
+.thread { width: 100%; border-collapse: collapse; font-size: 15.5px; }
+.table-wrap { overflow-x: auto; margin: 10px 0 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.thread th, .thread td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.thread tr:last-child td { border-bottom: 0; }
+.thread th { font: 700 12px/1.2 var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); background: var(--bg); white-space: nowrap; }
+.thread td:first-child { font-weight: 800; white-space: nowrap; }
+
+.ros { list-style: none; padding: 0; margin: 12px 0 18px; border-left: 2px solid var(--line); }
+.ros li { position: relative; padding: 0 0 18px 22px; margin: 0; max-width: none; }
+.ros li::before { content: ""; position: absolute; left: -7px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 2px solid var(--gold); }
+.ros .t { font: 800 13px/1 var(--sans); letter-spacing: .06em; color: var(--gold); font-variant-numeric: tabular-nums; }
+.ros h4 { margin: 4px 0 4px; font: 800 17px/1.3 var(--sans); }
+.ros p { margin: 0 0 6px; color: var(--ink); }
+.ros .muted { color: var(--muted); font-size: 15.5px; }
+
+.say { background: var(--say); border-radius: 8px; padding: 12px 14px; margin: 8px 0 6px; font-style: italic; }
+.say::before { content: "Say: "; font: 800 12px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; font-style: normal; color: var(--gold); }
+.spot { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--gold); border-radius: 0 10px 10px 0; padding: 14px 16px; margin: 8px 0 6px; }
+.spot b.tag { display: block; font: 800 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+.spot p:last-child, .spot ul:last-child { margin-bottom: 0; }
+.try { background: var(--tip); color: var(--tip-ink); border-radius: 8px; padding: 12px 14px; margin: 8px 0 6px; }
+.try::before { content: "They try it: "; font: 800 12px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; }
+.warn { background: var(--warn-soft); border-left: 3px solid var(--warn); border-radius: 0 8px 8px 0; padding: 12px 14px; margin: 10px 0 16px; }
+.warn strong { color: var(--warn); }
+
+.prep { list-style: none; padding: 0; display: grid; gap: 6px; margin: 8px 0 16px; }
+.prep li { margin: 0; max-width: none; }
+.prep label { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; cursor: pointer; font-size: 15.5px; }
+.prep input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--gold); }
+.prep input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.prep input:checked + span { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--gold); }
+
+.tools { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 12px 0 20px; }
+.tool { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+.tool h4 { margin: 0 0 4px; font: 400 22px/1.15 var(--serif); }
+.tool .best { font: 700 12px/1.3 var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+.tool p { margin: 0; font-size: 15.5px; color: var(--muted); }
+@media (max-width: 620px) { .tools { grid-template-columns: 1fr; } }
+
+.menu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 12px 0 20px; }
+.opt { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
+.opt .l { font: 800 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+.opt h4 { margin: 8px 0 6px; font: 400 22px/1.15 var(--serif); }
+.opt p { margin: 0 0 8px; font-size: 15.5px; }
+.opt ul { margin: 0; font-size: 15px; color: var(--muted); }
+.opt.own { border-style: dashed; border-color: var(--gold); }
+@media (max-width: 620px) { .menu { grid-template-columns: 1fr; } }
+.cant { columns: 2; column-gap: 28px; font-size: 15.5px; }
+.cant li { break-inside: avoid; }
+@media (max-width: 620px) { .cant { columns: 1; } }
+.foot { color: var(--muted); font-size: 14.5px; padding-top: 28px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<header class="hero wrap">
+  <div class="col">
+    <div class="kicker">Facilitator guide · For Brad only</div>
+    <h1>Team AI Program Guide</h1>
+    <p>Run sheets for all four sessions with the Mount LeConte Team: timing, what to say, live demos, a tool spotlight each week, and the value thread that ties it together. One 60-minute video session a week, recorded.</p>
+  </div>
+</header>
+
+<nav class="tabs wrap" aria-label="Sections">
+  <div class="col">
+    <a href="#thread">The value thread</a>
+    <a href="#tools">Which tool when</a>
+    <a href="#s1">Session 1</a>
+    <a href="#s2">Session 2</a>
+    <a href="#s3">Session 3</a>
+    <a href="#s4">Session 4</a>
+  </div>
+</nav>
+
+<main class="wrap">
+<div class="col">
+
+<section class="part" id="thread">
+  <div class="eyebrow">Read this first</div>
+  <h2>The value thread</h2>
+  <p class="lead">Each session should feel like the next step of one story: <strong>your team gets time back, and keeps what we build.</strong> Three habits make that visible every week.</p>
+  <ol>
+    <li><strong>Open every session with "time back."</strong> Ask each person what AI did for them since last week and roughly how many minutes it saved. Keep a running total. Session 4 ends with the number.</li>
+    <li><strong>Close every session with "you keep."</strong> Name the file or tool they walk away with, the same "You keep" line from the program overview.</li>
+    <li><strong>Point forward.</strong> End by saying how today's piece gets used next week. Each session builds on the last.</li>
+  </ol>
+  <div class="table-wrap">
+    <table class="thread">
+      <thead><tr><th>Session</th><th>They walk out with</th><th>How it carries forward</th></tr></thead>
+      <tbody>
+        <tr><td>Intro meeting</td><td>A finished carousel from one of Jared's listings</td><td>Proof it works on their real work. Session 1 explains why.</td></tr>
+        <tr><td>1 · How AI works</td><td>Brand voice file and the prompt cheat sheet</td><td>Every draft from here on uses the voice file.</td></tr>
+        <tr><td>2 · Automation</td><td>Lead reply drafts and the Monday market report</td><td>The voice file now runs on a schedule. Guarantee checkpoint.</td></tr>
+        <tr><td>3 · AI as a team</td><td>Shared team library and branded templates, including the carousel</td><td>Everyone works from the same setup. They pick the Session 4 project.</td></tr>
+        <tr><td>4 · Your pick</td><td>The finished project</td><td>Time-back total, then the Brad Bot handoff.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="warn"><strong>Not sure of their level yet.</strong> Session 1 opens with a three-question read of the room. Each session notes what to cut for beginners and what to add for anyone already ahead. Update this guide after the intro meeting.</div>
+</section>
+
+<section class="part" id="tools">
+  <div class="eyebrow">Reference for the tool spotlights</div>
+  <h2>Which Claude tool for which job</h2>
+  <p>Each session has a 10-minute tool spotlight. Use this page to keep the comparisons consistent. The simple rule to teach: <strong>start in chat, move to a Project when you repeat yourself, and let Brad build a skill or tool when the team does it every week.</strong></p>
+  <div class="tools">
+    <div class="tool"><h4>Chat</h4><div class="best">Best for: one-off questions and drafts</div><p>Fast and flexible. Forgets your setup between conversations unless you paste it in again.</p></div>
+    <div class="tool"><h4>Projects</h4><div class="best">Best for: anything you do again and again</div><p>A workspace with saved files and instructions, like the voice file and listing details. Every chat inside it starts with that context. Can be shared with the team.</p></div>
+    <div class="tool"><h4>Skills</h4><div class="best">Best for: a recipe the team repeats</div><p>Saved step-by-step instructions Claude follows the same way every time, such as brand voice or the listing carousel.</p></div>
+    <div class="tool"><h4>Connectors</h4><div class="best">Best for: working with your accounts</div><p>Let Claude read from tools like Gmail or Google Drive so you're not copying and pasting. Drafts only; nothing sends on its own.</p></div>
+    <div class="tool"><h4>Scheduled tasks</h4><div class="best">Best for: work due on a schedule</div><p>Run a saved job at a set time, like the Monday market report, and have the draft waiting.</p></div>
+    <div class="tool"><h4>Cowork</h4><div class="best">Best for: multi-step work on your computer</div><p>Claude works with the files and apps on your computer from the desktop app: sorting listing photos, filling a spreadsheet, assembling a packet.</p></div>
+    <div class="tool"><h4>Claude Code</h4><div class="best">Best for: building tools that run the same way every time</div><p>The most capable option for repeatable tools like the carousel. Works with real files, runs software, and checks its own output. Brad builds and maintains these.</p></div>
+    <div class="tool"><h4>Artifacts</h4><div class="best">Best for: pages and tools to view or share</div><p>Documents, checklists and small tools Claude makes as a page you can open, share, and come back to.</p></div>
+  </div>
+  <h3>Task comparison</h3>
+  <div class="table-wrap">
+    <table class="thread">
+      <thead><tr><th>Task</th><th>Use</th><th>Why that one</th></tr></thead>
+      <tbody>
+        <tr><td>Reply to a new lead</td><td>Project</td><td>The voice file and reply rules are already loaded.</td></tr>
+        <tr><td>Listing description</td><td>Project</td><td>Paste the MLS facts; the voice and fair housing rules come along.</td></tr>
+        <tr><td>Quick question</td><td>Chat</td><td>No setup needed. Verify anything legal or contract-related with the broker.</td></tr>
+        <tr><td>Monday market report</td><td>Scheduled task + skill</td><td>Same format every week, ready before the team starts.</td></tr>
+        <tr><td>Follow-ups from the inbox</td><td>Gmail connector</td><td>It reads the thread itself. You review and send.</td></tr>
+        <tr><td>Listing carousel</td><td>Skill built in Claude Code</td><td>Locked design, real photo files, self-checking.</td></tr>
+        <tr><td>Sort 200 listing photos</td><td>Cowork</td><td>File work on your own computer.</td></tr>
+        <tr><td>Team template library</td><td>Shared Project + skills</td><td>One setup everyone uses.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="warn"><strong>Check before Session 1:</strong> confirm which of these are included in the plan the team buys and whether they're available on the devices they use. Features and plan contents change often, so check the current Claude plan pages rather than this guide.</div>
+</section>
+
+<section class="part" id="s1">
+  <div class="eyebrow">Session 1 · 60 minutes</div>
+  <h2>How AI works</h2>
+  <div class="meta">
+    <div><b>Goal</b><span>AI stops sounding like AI and starts writing like the team.</span></div>
+    <div><b>You keep</b><span>Brand voice file and the prompt cheat sheet</span></div>
+    <div><b>Tool spotlight</b><span>Chat vs Projects</span></div>
+  </div>
+  <h3>Before the session</h3>
+  <ul class="prep" data-group="s1">
+    <li><label><input type="checkbox" id="s1a"><span>Ask each person for 3–5 real things they wrote: texts to clients, emails, a listing description they liked.</span></label></li>
+    <li><label><input type="checkbox" id="s1b"><span>Draft the voice file from those samples with the brand voice skill, so the live build is a refinement rather than a blank page.</span></label></li>
+    <li><label><input type="checkbox" id="s1c"><span>Pick one real recent lead inquiry for the before/after demo (remove the client's name).</span></label></li>
+    <li><label><input type="checkbox" id="s1d"><span>Print or email the cheat sheet PDF.</span></label></li>
+  </ul>
+  <h3>Run of show</h3>
+  <ol class="ros">
+    <li><span class="t">0:00–0:05</span><h4>Welcome and read the room</h4><p>Ask three questions: Who used AI this week? For what? What made you stop using it?</p><p class="muted">Their answers set the pace. Mostly beginners: slow down the demo and skip the Projects deep dive. Someone advanced: make them your helper during the "try it" parts.</p></li>
+    <li><span class="t">0:05–0:15</span><h4>Why AI sounds like AI</h4><p>Show the same lead reply twice: once from a bare prompt, once with the voice samples and a clear reader. Let them point out the difference.</p><div class="say">AI writes the average of everything it has read. Give it your voice and a real reader, and it stops sounding average.</div></li>
+    <li><span class="t">0:15–0:20</span><h4>The prompt phrases</h4><p>Hand out the cheat sheet. Walk through the four groups in one sentence each and demo one phrase live: "Ask me questions before you start."</p><div class="say">You don't need to memorize these. Put this by your desk and steal from it.</div></li>
+    <li><span class="t">0:20–0:30</span><h4>Tool spotlight: Chat vs Projects</h4><div class="spot"><b class="tag">Feature tutorial</b><p>Show the same request in a fresh chat and inside a Project with the voice file loaded. Then show how to create a Project, add files, and write project instructions.</p><p class="muted">Takeaway: chat for one-offs, Projects for anything you'll do twice.</p></div></li>
+    <li><span class="t">0:30–0:50</span><h4>Build the brand voice file</h4><p>Show the draft voice file. Read it out loud and ask, "Does this sound like you?" Edit it live from their reactions, then save it into the team Project.</p><div class="try">Each person writes a reply to the sample lead inside the Project. Compare drafts side by side.</div></li>
+    <li><span class="t">0:50–0:57</span><h4>The check step</h4><p>Run "Do a missed opportunities check" and "Flag anything you guessed" on one of their drafts. Show how to keep what works with "Only change [this]."</p></li>
+    <li><span class="t">0:57–1:00</span><h4>You keep, and this week</h4><p>Name what they keep. Homework: use AI on one real message every day and note roughly how many minutes it saved.</p><div class="say">The guarantee starts now. By next session, you'll be using this on real work.</div></li>
+  </ol>
+</section>
+
+<section class="part" id="s2">
+  <div class="eyebrow">Session 2 · 60 minutes</div>
+  <h2>Automation</h2>
+  <div class="meta">
+    <div><b>Goal</b><span>Lead replies and a Monday market report, drafted on a schedule. Drafts only.</span></div>
+    <div><b>You keep</b><span>Lead reply drafts and the weekly market report</span></div>
+    <div><b>Tool spotlight</b><span>Connectors, scheduled tasks, Cowork</span></div>
+  </div>
+  <h3>Before the session</h3>
+  <ul class="prep" data-group="s2">
+    <li><label><input type="checkbox" id="s2a"><span>Ask where their leads come in (email, Zillow, website form) and gather 3 recent examples with names removed.</span></label></li>
+    <li><label><input type="checkbox" id="s2b"><span>Build a first Monday market report for their area with the weekly market report skill, with every number sourced.</span></label></li>
+    <li><label><input type="checkbox" id="s2c"><span>Confirm whether connecting Gmail is OK with Jared and the brokerage before showing it.</span></label></li>
+  </ul>
+  <h3>Run of show</h3>
+  <ol class="ros">
+    <li><span class="t">0:00–0:05</span><h4>Time back</h4><p>Each person shares one real use from the week and the minutes saved. Start the running total.</p><div class="warn"><strong>Guarantee checkpoint.</strong> If anyone hasn't used it on real work, spend two minutes finding out why and fix it today.</div></li>
+    <li><span class="t">0:05–0:12</span><h4>What automation means here</h4><div class="say">Automation means the draft is waiting for you. It never sends to a client on its own. You stay the one who hits send.</div></li>
+    <li><span class="t">0:12–0:22</span><h4>Tool spotlight: connectors, scheduled tasks, Cowork</h4><div class="spot"><b class="tag">Feature tutorial</b><ul><li><strong>Connectors:</strong> connect Gmail and draft a reply from a real thread.</li><li><strong>Scheduled tasks:</strong> show a job set to run every Monday morning.</li><li><strong>Cowork vs scheduled tasks:</strong> Cowork does a job on your computer now; a scheduled task runs on its own later.</li></ul></div></li>
+    <li><span class="t">0:22–0:40</span><h4>Build the lead reply drafts</h4><p>Write the reply rules together: answer within the hour, one question back, voice file, a clear next step. Save them as project instructions.</p><div class="try">Each person pastes a recent lead and gets a draft, then uses one cheat sheet phrase to improve it.</div></li>
+    <li><span class="t">0:40–0:55</span><h4>The Monday market report</h4><p>Show the report you prepared. Point out that every number is sourced. Set it to run every Monday before the team starts, then show where the draft will appear.</p><div class="say">Monday morning, this is already written. You read it, fix anything, and post it.</div></li>
+    <li><span class="t">0:55–1:00</span><h4>You keep, and this week</h4><p>Homework: run every new lead through the reply drafts this week. Next week, this setup is shared across the whole team.</p></li>
+  </ol>
+</section>
+
+<section class="part" id="s3">
+  <div class="eyebrow">Session 3 · 60 minutes</div>
+  <h2>AI as a team</h2>
+  <div class="meta">
+    <div><b>Goal</b><span>Everyone on the same setup, the same files and the same look.</span></div>
+    <div><b>You keep</b><span>A shared team library and branded templates</span></div>
+    <div><b>Tool spotlight</b><span>Skills and Claude Code</span></div>
+  </div>
+  <h3>Before the session</h3>
+  <ul class="prep" data-group="s3">
+    <li><label><input type="checkbox" id="s3a"><span>Set up the shared team Project with the voice file, reply rules and market report.</span></label></li>
+    <li><label><input type="checkbox" id="s3b"><span>Make the carousel skill available to the team, and have each person bring one listing link.</span></label></li>
+    <li><label><input type="checkbox" id="s3c"><span>Add each listing site to the allowed list and test one run per person.</span></label></li>
+    <li><label><input type="checkbox" id="s3d"><span>Prepare the Session 4 menu (below) to show at the end.</span></label></li>
+  </ul>
+  <h3>Run of show</h3>
+  <ol class="ros">
+    <li><span class="t">0:00–0:05</span><h4>Time back</h4><p>Wins and minutes. Update the running total out loud.</p></li>
+    <li><span class="t">0:05–0:12</span><h4>One setup for everyone</h4><p>Tour the shared Project: what's in it, where templates live, how to name new ones.</p></li>
+    <li><span class="t">0:12–0:22</span><h4>Tool spotlight: Skills and Claude Code</h4><div class="spot"><b class="tag">Feature tutorial</b><p>Explain a skill as a recipe card. Then tell the fireplace story: the carousel cut the fireplace out, looked at its own work, and fixed it.</p><p class="muted">Takeaway: chat writes words; a skill built in Claude Code does the whole job the same way every time.</p></div></li>
+    <li><span class="t">0:22–0:42</span><h4>Listing carousels for everyone</h4><p>Demo once, then let each person run it on their own listing.</p><div class="try">Each person makes a carousel and asks for two changes in their own words.</div><p>Teach the three rules: read every slide before posting, describe the property and never the buyer, agent name and brokerage on the closing slide.</p></li>
+    <li><span class="t">0:42–0:52</span><h4>Build out the team library</h4><p>Save today's best outputs as templates: lead reply, listing description, carousel, market report. Decide together what to add next.</p></li>
+    <li><span class="t">0:52–1:00</span><h4>Pick Session 4</h4><p>Show the menu and let the team choose. Their pick gives you a week to prepare.</p><div class="say">Next week is yours. Pick the project, and we'll build it together, live.</div></li>
+  </ol>
+</section>
+
+<section class="part" id="s4">
+  <div class="eyebrow">Session 4 · 60 minutes</div>
+  <h2>Your pick</h2>
+  <div class="meta">
+    <div><b>Goal</b><span>The team chooses one project; we build it together, live.</span></div>
+    <div><b>You keep</b><span>The finished project</span></div>
+    <div><b>Tool spotlight</b><span>Whichever tool the project needs, explained as you build</span></div>
+  </div>
+  <h3>The menu (show at the end of Session 3)</h3>
+  <div class="menu">
+    <div class="opt"><div class="l">Option A</div><h4>Open house kit</h4><p>Everything for one open house from a listing link.</p><ul><li>Social post and story</li><li>Neighbor invitation letter</li><li>Sign-in follow-up texts, sent by the agent</li></ul></div>
+    <div class="opt"><div class="l">Option B</div><h4>Just listed / just sold</h4><p>Builds on the carousel for every status change.</p><ul><li>Just-listed and just-sold slides</li><li>Postcard copy</li><li>A thank-you note to the seller</li></ul></div>
+    <div class="opt"><div class="l">Option C</div><h4>Past client follow-up</h4><p>Stay in touch without writing from scratch.</p><ul><li>Home anniversary messages</li><li>Quarterly check-in emails with local market notes</li><li>Holiday notes in the team voice</li></ul></div>
+    <div class="opt own"><div class="l">Option D</div><h4>Choose your own</h4><p>A good fit if it repeats every week or month, uses information you already have, ends as a draft you review, and can be built in one hour.</p><ul><li>Bring one real example of the task.</li><li>Agree on it with Brad by the end of Session 3.</li></ul></div>
+  </div>
+  <h3>Out of reach for Option D (say no kindly)</h3>
+  <ul class="cant">
+    <li>Posting or sending to clients automatically without review</li>
+    <li>Logging into the MLS or a CRM that has no connector</li>
+    <li>Pricing a home or replacing a CMA</li>
+    <li>Legal or contract advice</li>
+    <li>Answering phone calls or texting leads live</li>
+    <li>Building a full website or app in an hour</li>
+    <li>Market numbers with no source to check</li>
+    <li>Polished video editing</li>
+  </ul>
+  <div class="say">That's a great idea, but it's bigger than one session. Let's build the piece of it we can finish today.</div>
+  <h3>Run of show</h3>
+  <ol class="ros">
+    <li><span class="t">0:00–0:05</span><h4>Time back, final count</h4><p>Collect this week's minutes and announce the total across all four weeks.</p></li>
+    <li><span class="t">0:05–0:10</span><h4>The plan for today</h4><p>Restate the chosen project and what "done" looks like at the end of the hour.</p></li>
+    <li><span class="t">0:10–0:45</span><h4>Build it live</h4><p>Build in the shared Project, or as a skill if it needs a fixed format. Explain each tool as you use it, in one sentence, tied back to the comparison page.</p><div class="try">Around 0:35, hand control to one team member to run it once while the others watch.</div></li>
+    <li><span class="t">0:45–0:55</span><h4>Everyone runs it</h4><p>Each person uses it on real work and fixes one thing with a cheat sheet phrase.</p></li>
+    <li><span class="t">0:55–1:00</span><h4>Graduation and the Brad Bot</h4><p>Recap everything they keep, introduce the Brad Bot for questions after the program, and ask what was most useful.</p><div class="say">Everything we built is yours. When you get stuck, ask the Brad Bot first, then me.</div></li>
+  </ol>
+  <p class="foot">Built from the Team AI Program overview for the Mount LeConte Team. Update the read-the-room notes after the intro meeting.</p>
+</section>
+
+</div>
+</main>
+
+<script>
+(function () {
+  var KEY = 'team-ai-guide-prep';
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { saved = {}; }
+  document.querySelectorAll('.prep input[type=checkbox]').forEach(function (b) {
+    b.checked = !!saved[b.id];
+    b.addEventListener('change', function () {
+      saved[b.id] = b.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+    });
+  });
+})();
+</script>

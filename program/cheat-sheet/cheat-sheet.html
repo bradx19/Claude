@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Prompt Phrases Cheat Sheet</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap">
+<style>
+  @page { size: 8.5in 11in; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --ink: #1E1E1E; --cream: #F5F0E6; --card: #FFFDF8; --line: #E2D9C6;
+    --gold: #B3862C; --gold-soft: #F1E5CB; --muted: #5E5A52;
+    --serif: 'DM Serif Display', Georgia, serif; --sans: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  }
+  html, body { width: 8.5in; height: 11in; }
+  body { background: var(--cream); color: var(--ink); font-family: var(--sans); display: flex; flex-direction: column; }
+  header { background: var(--ink); color: #F5F0E6; padding: 0.42in 0.5in 0.36in; }
+  .kicker { font: 700 10.5px/1 var(--sans); letter-spacing: .22em; text-transform: uppercase; color: #D9AE55; }
+  h1 { font: 400 40px/1.02 var(--serif); margin-top: 10px; }
+  .sub { font-size: 13.5px; color: #CFC8BA; margin-top: 8px; }
+  .habit { display: flex; align-items: center; gap: 10px; margin-top: 16px; }
+  .habit span { font: 700 12px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; background: #2E2C28; border: 1px solid #4A463E; color: #F5F0E6; padding: 8px 12px; border-radius: 999px; }
+  .habit i { color: #D9AE55; font-style: normal; font-weight: 800; }
+  main { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 0.2in; padding: 0.3in 0.5in 0.22in; }
+  .group { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 16px 10px; display: flex; flex-direction: column; }
+  .ghead { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .num { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--gold); color: var(--ink); display: grid; place-items: center; font: 800 13px/1 var(--sans); flex: none; }
+  .gname { font: 800 13px/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; }
+  .gwhen { font-size: 11.5px; color: var(--muted); margin-left: auto; font-style: italic; }
+  .p { padding: 8px 0 9px; border-top: 1px dashed var(--line); }
+  .p:first-of-type { border-top: 0; padding-top: 2px; }
+  .say { font: 700 14.5px/1.28 var(--sans); }
+  .say::before { content: "\201C"; color: var(--gold); }
+  .say::after { content: "\201D"; color: var(--gold); }
+  .why { font-size: 12px; line-height: 1.35; color: var(--muted); margin-top: 3px; }
+  .bottom { display: grid; grid-template-columns: 1.3fr 1fr; gap: 0.2in; padding: 0 0.5in 0.22in; }
+  .combo { background: var(--gold-soft); border-radius: 12px; padding: 13px 16px; }
+  .combo b { font: 800 11px/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 6px; }
+  .combo p { font: 600 13px/1.4 var(--sans); }
+  .never { background: var(--card); border: 1.5px solid var(--ink); border-radius: 12px; padding: 13px 16px; }
+  .never b { font: 800 11px/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+  .never p { font-size: 12.5px; line-height: 1.4; }
+  footer { display: flex; justify-content: space-between; padding: 10px 0.5in 0.3in; font-size: 11px; color: var(--muted); border-top: 1px solid var(--line); margin: 0 0.5in; padding-left: 0; padding-right: 0; }
+  footer strong { color: var(--ink); }
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">Team AI Program · Keep this by your desk</div>
+  <h1>Say this to get better results</h1>
+  <div class="sub">Copy these phrases into any prompt. They work in Claude, ChatGPT, or any AI tool.</div>
+  <div class="habit"><span>Ask first</span><i>→</i><span>Draft</span><i>→</i><span>Check it</span><i>→</i><span>Refine</span></div>
+</header>
+
+<main>
+  <section class="group">
+    <div class="ghead"><div class="num">1</div><div class="gname">Start right</div><div class="gwhen">before it writes</div></div>
+    <div class="p"><div class="say">Ask me questions before you start.</div><div class="why">It finds what's missing instead of guessing.</div></div>
+    <div class="p"><div class="say">This is for [who]. They care about [what].</div><div class="why">It writes to your reader, not to everyone.</div></div>
+    <div class="p"><div class="say">Here's an example I like. Match it.</div><div class="why">One example beats a paragraph of description.</div></div>
+    <div class="p"><div class="say">Use my voice file.</div><div class="why">Sounds like your team, not a robot.</div></div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><div class="num">2</div><div class="gname">Shape it</div><div class="gwhen">while it writes</div></div>
+    <div class="p"><div class="say">Give me 3 versions: short, warm, and bold.</div><div class="why">Pick the best one instead of settling.</div></div>
+    <div class="p"><div class="say">Keep it under 80 words.</div><div class="why">A number works better than "make it short."</div></div>
+    <div class="p"><div class="say">Make it engaging and easy to read.</div><div class="why">Short lines, plain words, a clear next step.</div></div>
+    <div class="p"><div class="say">Write it like a text, not an email.</div><div class="why">Sets the tone in six words.</div></div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><div class="num">3</div><div class="gname">Check it</div><div class="gwhen">before you send</div></div>
+    <div class="p"><div class="say">Do a missed opportunities check.</div><div class="why">What did I leave out that would help?</div></div>
+    <div class="p"><div class="say">Run a continuity and consistency check.</div><div class="why">Names, numbers, and tone match all the way through.</div></div>
+    <div class="p"><div class="say">Flag anything you guessed.</div><div class="why">Separates real facts from filler.</div></div>
+    <div class="p"><div class="say">Do a fair housing check.</div><div class="why">Describe the home, never who should live there.</div></div>
+  </section>
+
+  <section class="group">
+    <div class="ghead"><div class="num">4</div><div class="gname">Refine it</div><div class="gwhen">when it's close</div></div>
+    <div class="p"><div class="say">Keep everything else. Only change [this].</div><div class="why">Stops it from rewriting what already works.</div></div>
+    <div class="p"><div class="say">Rate it 1 to 10, then make it a 10.</div><div class="why">It critiques itself, then fixes the gaps.</div></div>
+    <div class="p"><div class="say">Read it as a skeptical buyer. What's weak?</div><div class="why">Finds the holes before a client does.</div></div>
+    <div class="p"><div class="say">Save this as a template I can reuse.</div><div class="why">Do the work once, use it every week.</div></div>
+  </section>
+</main>
+
+<div class="bottom">
+  <div class="combo"><b>Stack them</b><p>"Ask me questions before you start. Keep it under 80 words. Then do a missed opportunities check."</p></div>
+  <div class="never"><b>Never paste in</b><p>Social Security numbers, bank or loan details, or anything a client asked you to keep private.</p></div>
+</div>
+
+<footer><span><strong>Visionox</strong> · Brad Melancon · Knoxville, TN</span><span>865-382-3339</span></footer>
+</body>
+</html>
