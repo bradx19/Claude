@@ -50,4 +50,4 @@ Use it when the agent asks for something more creative, or the listing sells a l
   Each moment has `label`, `time` ("8:00 AM"), `mood` (morning, midday, evening, dusk, night), `photo`, optional `focus`, `headline`, `sub`.
 - Pick moments that match real photos and real features only. Same fair-housing and voice rules as above.
 - Render: `node <this skill folder>/render-day.js <listing folder>/day.json` → `output-day/`.
-- Check the cover title is readable and no headline wraps onto a single orphan word.
+- Photos sit clean in the top 940px with only a small time tag on them; all copy goes in the panel below. Keep headlines to one line in the panel.

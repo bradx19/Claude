@@ -1,5 +1,6 @@
 // Renders a "day in the life" carousel plan (day.json) into 1080x1350 PNGs plus a preview sheet.
 // Slide 1 is a cover, then one slide per time of day, then a closing slide with the facts.
+// Each photo sits clean in the top of the slide; all text lives in a solid panel underneath.
 // Usage: node render-day.js <path/to/day.json>
 const fs = require('fs');
 const path = require('path');
@@ -20,14 +21,16 @@ const { gold, ink } = brand.colors;
 const esc = (s = '') => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const img = p => `data:image/jpeg;base64,${fs.readFileSync(path.resolve(planDir, p)).toString('base64')}`;
 
-// Light over each photo, by time of day: a soft colour wash plus how dark the bottom gets
+// A light colour cast on each photo by time of day, kept subtle so the photo still reads true
 const moods = {
-  morning: { wash: 'rgba(255,196,120,.16)', blend: 'soft-light' },
-  midday:  { wash: 'rgba(255,255,255,0)',   blend: 'normal' },
-  evening: { wash: 'rgba(255,140,60,.22)',  blend: 'soft-light' },
-  dusk:    { wash: 'rgba(120,70,160,.18)',  blend: 'soft-light' },
-  night:   { wash: 'rgba(20,40,90,.35)',    blend: 'multiply' },
+  morning: 'rgba(255,196,120,.10)',
+  midday:  'rgba(255,255,255,0)',
+  evening: 'rgba(255,150,70,.12)',
+  dusk:    'rgba(150,90,170,.10)',
+  night:   'rgba(30,50,110,.18)',
 };
+
+const PHOTO_H = 940; // photo area height; the panel fills the rest of the 1350px slide
 
 const head = `<!doctype html><html><head><meta charset="utf-8">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&display=block" rel="stylesheet">
@@ -35,62 +38,61 @@ const head = `<!doctype html><html><head><meta charset="utf-8">
   * { margin: 0; box-sizing: border-box; }
   body { width: 1080px; height: 1350px; overflow: hidden; position: relative;
     font-family: '${brand.font}', sans-serif; color: #fff; background: ${ink}; }
-  .photo { position: absolute; inset: 0; background-size: cover; background-repeat: no-repeat; }
-  .wash { position: absolute; inset: 0; }
-  .shade { position: absolute; inset: 0;
-    background: linear-gradient(to bottom, rgba(14,26,43,.70) 0%, rgba(14,26,43,0) 20%, rgba(14,26,43,0) 42%, rgba(14,26,43,.80) 72%, ${ink} 100%); }
   .serif { font-family: 'Fraunces', serif; font-optical-sizing: auto; }
-  .brand { position: absolute; top: 64px; left: 72px; font-size: 22px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
+  .photo { position: absolute; top: 0; left: 0; right: 0; height: ${PHOTO_H}px; background-size: cover; background-repeat: no-repeat; }
+  .wash { position: absolute; inset: 0; mix-blend-mode: soft-light; }
+  .panel { position: absolute; top: ${PHOTO_H}px; left: 0; right: 0; bottom: 0; background: ${ink}; border-top: 6px solid ${gold}; }
 
-  /* Timeline across the top: one stop per moment of the day */
-  .track { position: absolute; top: 132px; left: 72px; right: 72px; height: 60px; }
-  .track .line { position: absolute; top: 9px; left: 0; right: 0; height: 2px; background: rgba(255,255,255,.35); }
-  .track .done { position: absolute; top: 9px; left: 0; height: 2px; background: ${gold}; }
+  /* Small time tag on the photo corner: the only thing on top of the image */
+  .tag { position: absolute; top: 48px; left: 48px; padding: 14px 22px; background: rgba(14,26,43,.78); border-radius: 4px;
+    font-size: 22px; font-weight: 700; letter-spacing: .18em; color: ${gold}; }
+
+  /* Timeline: one stop per moment of the day */
+  .track { position: absolute; top: 40px; left: 72px; right: 72px; height: 50px; }
+  .track .line { position: absolute; top: 7px; left: 0; right: 0; height: 2px; background: rgba(255,255,255,.25); }
+  .track .done { position: absolute; top: 7px; left: 0; height: 2px; background: ${gold}; }
   .stop { position: absolute; top: 0; transform: translateX(-50%); text-align: center; }
-  .stop i { display: block; width: 20px; height: 20px; margin: 0 auto; border-radius: 50%; border: 2px solid rgba(255,255,255,.7); background: ${ink}; }
+  .stop i { display: block; width: 16px; height: 16px; margin: 0 auto; border-radius: 50%; border: 2px solid rgba(255,255,255,.55); background: ${ink}; }
   .stop.past i { background: #fff; border-color: #fff; }
-  .stop.now i { background: ${gold}; border-color: ${gold}; box-shadow: 0 0 0 8px rgba(212,168,75,.28), 0 0 28px rgba(212,168,75,.8); }
-  .stop span { display: block; margin-top: 14px; font-size: 18px; font-weight: 600; letter-spacing: .08em; color: rgba(255,255,255,.7); white-space: nowrap; }
+  .stop.now i { background: ${gold}; border-color: ${gold}; box-shadow: 0 0 0 6px rgba(212,168,75,.25); }
+  .stop span { display: block; margin-top: 10px; font-size: 16px; font-weight: 600; letter-spacing: .08em; color: rgba(255,255,255,.55); white-space: nowrap; }
   .stop.now span { color: ${gold}; }
 
-  .copy { position: absolute; left: 72px; right: 72px; bottom: 170px; text-shadow: 0 2px 20px rgba(14,26,43,.45); }
-  .time { display: flex; align-items: baseline; gap: 18px; line-height: .9; }
-  .time b { font-size: 230px; font-weight: 300; font-style: italic; letter-spacing: -.03em; }
-  .time em { font-style: normal; font-family: '${brand.font}'; font-size: 34px; font-weight: 700; letter-spacing: .2em; color: ${gold}; }
-  .headline { font-size: 74px; font-weight: 500; line-height: 1.05; margin-top: 18px; letter-spacing: -.01em; }
-  .sub { font-size: 32px; line-height: 1.4; margin-top: 22px; color: rgba(255,255,255,.88); max-width: 900px; }
+  .row { position: absolute; top: 122px; left: 72px; right: 72px; display: flex; align-items: center; gap: 44px; }
+  .time { flex: none; line-height: .85; text-align: left; }
+  .time b { display: block; font-size: 132px; font-weight: 300; font-style: italic; letter-spacing: -.03em; }
+  .time em { display: block; margin-top: 6px; font-style: normal; font-family: '${brand.font}'; font-size: 24px; font-weight: 700; letter-spacing: .24em; color: ${gold}; }
+  .vr { flex: none; width: 2px; align-self: stretch; background: rgba(255,255,255,.18); }
+  .headline { font-size: 50px; font-weight: 500; line-height: 1.08; letter-spacing: -.01em; }
+  .sub { font-size: 25px; line-height: 1.4; margin-top: 12px; color: rgba(255,255,255,.78); }
 
-  .footer { position: absolute; left: 72px; right: 72px; bottom: 64px; display: flex; justify-content: space-between;
-    font-size: 22px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.8);
-    border-top: 1.5px solid rgba(255,255,255,.35); padding-top: 26px; }
+  .footer { position: absolute; left: 72px; right: 72px; bottom: 40px; display: flex; justify-content: space-between;
+    font-size: 18px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.55); }
   .footer .swipe { color: ${gold}; }
 
   /* Cover */
-  .cover .copy { bottom: 190px; text-shadow: 0 2px 24px rgba(14,26,43,.6); }
-  .cover .shade { background: linear-gradient(to bottom, rgba(14,26,43,.6) 0%, rgba(14,26,43,0) 18%, rgba(14,26,43,0) 30%, rgba(14,26,43,.85) 55%, ${ink} 100%); }
-  .eyebrow { font-size: 26px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: ${gold}; }
-  .cover h1 { font-weight: 400; line-height: .95; margin-top: 26px; }
-  .cover h1 .a { display: block; font-size: 96px; font-style: italic; font-weight: 300; }
-  .cover h1 .b { display: block; font-size: 132px; letter-spacing: -.02em; }
-  .rule { width: 120px; height: 4px; background: ${gold}; margin: 40px 0 30px; }
+  .cover .copy { position: absolute; top: 44px; left: 72px; right: 72px; }
+  .eyebrow { font-size: 22px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: ${gold}; }
+  .cover h1 { font-weight: 400; line-height: 1; margin-top: 18px; }
+  .cover h1 .a { font-size: 64px; font-style: italic; font-weight: 300; }
+  .cover h1 .b { display: block; font-size: 104px; letter-spacing: -.02em; }
+  .cover .sub { margin-top: 18px; }
 
   /* Closing */
-  .close { background: ${ink}; }
-  .strip { position: absolute; top: 96px; left: 72px; right: 72px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
-  .strip div { height: 420px; background-size: cover; background-position: center; border-radius: 6px; position: relative; }
-  .strip div span { position: absolute; left: 0; right: 0; bottom: -40px; text-align: center; font-size: 19px; font-weight: 600; letter-spacing: .08em; color: rgba(255,255,255,.7); }
-  .close .copy { bottom: 190px; }
-  .close h2 { font-size: 104px; font-weight: 400; line-height: 1; letter-spacing: -.02em; margin-top: 22px; }
-  .close h2 i { font-weight: 300; }
-  .facts { list-style: none; padding: 0; margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 40px; font-size: 30px; }
-  .facts li { padding-left: 30px; position: relative; color: rgba(255,255,255,.92); }
-  .facts li::before { content: ''; position: absolute; left: 0; top: 14px; width: 12px; height: 12px; background: ${gold}; transform: rotate(45deg); }
-  .button { display: inline-block; margin-top: 54px; padding: 24px 40px; background: ${gold}; color: ${ink}; font-size: 26px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; border-radius: 4px; }
-  .who { display: inline-block; margin-left: 28px; font-size: 26px; color: rgba(255,255,255,.75); }
+  .strip { position: absolute; top: 72px; left: 72px; right: 72px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .strip div { height: 600px; background-size: cover; background-position: center; border-radius: 6px; position: relative; }
+  .strip div span { position: absolute; left: 0; right: 0; bottom: -36px; text-align: center; font-size: 18px; font-weight: 600; letter-spacing: .08em; color: rgba(255,255,255,.6); }
+  .close .copy { position: absolute; left: 72px; right: 72px; bottom: 120px; }
+  .close h2 { font-size: 92px; font-weight: 400; line-height: 1; letter-spacing: -.02em; margin-top: 18px; }
+  .facts { list-style: none; padding: 0; margin-top: 34px; display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 14px 48px; font-size: 28px; }
+  .facts li { padding-left: 28px; position: relative; color: rgba(255,255,255,.9); }
+  .facts li::before { content: ''; position: absolute; left: 0; top: 13px; width: 11px; height: 11px; background: ${gold}; transform: rotate(45deg); }
+  .button { display: inline-block; margin-top: 44px; padding: 22px 38px; background: ${gold}; color: ${ink}; font-size: 24px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; border-radius: 4px; }
+  .who { display: inline-block; margin-left: 28px; font-size: 24px; color: rgba(255,255,255,.7); }
 </style></head><body>`;
 
 const footer = (n, total, swipe) =>
-  `<div class="footer"><span>${esc(plan.footer)}</span><span class="${swipe ? 'swipe' : ''}">${swipe ? 'Swipe →' : `${n} / ${total}`}</span></div>`;
+  `<div class="footer"><span>${esc(brand.team)} • ${esc(plan.footer)}</span><span class="${swipe ? 'swipe' : ''}">${swipe ? 'Swipe →' : `${n} / ${total}`}</span></div>`;
 
 function track(active) {
   const n = plan.moments.length;
@@ -100,29 +102,26 @@ function track(active) {
   return `<div class="track"><div class="line"></div><div class="done" style="width:${x(active)}%"></div>${stops}</div>`;
 }
 
-function photoLayers(photo, focus, mood) {
-  const m = moods[mood] || moods.midday;
-  return `<div class="photo" style="background-image:url('${img(photo)}');background-position:${focus || 'center'}"></div>
-    <div class="wash" style="background:${m.wash};mix-blend-mode:${m.blend}"></div><div class="shade"></div>`;
-}
+const photo = (p, focus, mood, tag = '') =>
+  `<div class="photo" style="background-image:url('${img(p)}');background-position:${focus || 'center'}">
+    <div class="wash" style="background:${moods[mood] || moods.midday}"></div>${tag}</div>`;
 
 function coverSlide(total) {
   const c = plan.cover;
-  return `${head}<div class="cover">${photoLayers(c.photo, c.focus, 'morning')}
-    <div class="brand">${esc(brand.team)}</div>
-    <div class="copy"><div class="eyebrow">${esc(c.eyebrow)}</div>
+  return `${head}<div class="cover">${photo(c.photo, c.focus, 'midday')}
+    <div class="panel"><div class="copy"><div class="eyebrow">${esc(c.eyebrow)}</div>
       <h1 class="serif"><span class="a">${esc(c.kicker)}</span><span class="b">${esc(c.title)}</span></h1>
-      <div class="rule"></div><div class="sub">${esc(c.sub)}</div></div>
-    ${footer(1, total, true)}</div></body></html>`;
+      <div class="sub">${esc(c.sub)}</div></div>
+    ${footer(1, total, true)}</div></div></body></html>`;
 }
 
 function momentSlide(m, i, total) {
   const [num, ampm] = m.time.split(' ');
-  return `${head}${photoLayers(m.photo, m.focus, m.mood)}
-    <div class="brand">${esc(brand.team)}</div>${track(i)}
-    <div class="copy"><div class="time serif"><b>${esc(num)}</b><em>${esc(ampm)}</em></div>
-      <div class="headline serif">${esc(m.headline)}</div><div class="sub">${esc(m.sub)}</div></div>
-    ${footer(i + 2, total)}</body></html>`;
+  return `${head}${photo(m.photo, m.focus, m.mood, `<div class="tag">${esc(m.label)}</div>`)}
+    <div class="panel">${track(i)}
+      <div class="row"><div class="time serif"><b>${esc(num)}</b><em>${esc(ampm)}</em></div><div class="vr"></div>
+        <div><div class="headline serif">${esc(m.headline)}</div><div class="sub">${esc(m.sub)}</div></div></div>
+      ${footer(i + 2, total)}</div></body></html>`;
 }
 
 function closingSlide(total) {
