@@ -40,3 +40,14 @@ Output: `output/slide_1.png` … `slide_5.png` and `output/preview.png`, inside 
 6. **Render:** `node <this skill folder>/render.js <listing folder>/slides.json`
 7. **Check your work.** Open `output/preview.png`, then each slide. Make sure the text is readable, nothing is cut off, and the photo isn't badly cropped. Fix `slides.json` and re-render if needed.
 8. **Hand off.** Show the preview and list the five headlines so the agent can approve or change them. Say it's a draft for them to post.
+
+## Alternate style: "A day at…"
+
+A 7-slide story (cover, five times of day, closing recap) with a serif display font and a timeline across the top.
+Use it when the agent asks for something more creative, or the listing sells a lifestyle (cabins, rentals).
+
+- Plan: `day.json` in the listing folder. See `demo`-style example at `listings/honey-bear-lodge/day.json`.
+  Each moment has `label`, `time` ("8:00 AM"), `mood` (morning, midday, evening, dusk, night), `photo`, optional `focus`, `headline`, `sub`.
+- Pick moments that match real photos and real features only. Same fair-housing and voice rules as above.
+- Render: `node <this skill folder>/render-day.js <listing folder>/day.json` → `output-day/`.
+- Check the cover title is readable and no headline wraps onto a single orphan word.
