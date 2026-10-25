@@ -1,0 +1,41 @@
+{
+  "brand": "mount-leconte",
+  "footer": "Honey Bear Lodge \u2022 Pigeon Forge",
+  "slides": [
+    {
+      "photo": "photos/exterior.jpg",
+      "eyebrow": "Pigeon Forge, Tennessee",
+      "headline": "Under a mile from the Parkway",
+      "sub": "A log cabin with a wraparound covered porch, set in the trees."
+    },
+    {
+      "photo": "photos/living.jpg",
+      "focus": "22% center",
+      "eyebrow": "The main level",
+      "headline": "Cozy up by the stone fireplace",
+      "sub": "Vaulted ceilings, a stone fireplace and doors out to the deck."
+    },
+    {
+      "photo": "photos/hot-tub.jpg",
+      "focus": "60% center",
+      "eyebrow": "The lower deck",
+      "headline": "End the day in the hot tub",
+      "sub": "A covered hot tub looking straight out into the woods."
+    },
+    {
+      "photo": "photos/pool.jpg",
+      "focus": "35% center",
+      "eyebrow": "Brookstone Village",
+      "headline": "A community pool for summer days",
+      "sub": "The neighborhood pool, open to guests in season."
+    },
+    {
+      "photo": "photos/deck.jpg",
+      "focus": "45% center",
+      "eyebrow": "4 beds \u2022 3 baths \u2022 Sold turnkey",
+      "headline": "Want a closer look?",
+      "sub": "The Mount LeConte Team",
+      "button": "Ask us for details"
+    }
+  ]
+}

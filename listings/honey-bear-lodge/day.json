@@ -1,0 +1,30 @@
+{
+  "brand": "mount-leconte",
+  "footer": "Honey Bear Lodge • Pigeon Forge",
+  "cover": {
+    "photo": "photos/exterior.jpg",
+    "focus": "center 40%",
+    "eyebrow": "Pigeon Forge, Tennessee",
+    "kicker": "A day at",
+    "title": "Honey Bear Lodge",
+    "sub": "4 bedrooms, 3 baths, under a mile from the Parkway."
+  },
+  "moments": [
+    { "label": "8 AM", "time": "8:00 AM", "mood": "morning", "photo": "photos/deck.jpg", "focus": "40% center",
+      "headline": "Coffee on the covered deck", "sub": "Swivel chairs, a fire table and trees on every side." },
+    { "label": "NOON", "time": "12:00 PM", "mood": "midday", "photo": "photos/pool.jpg", "focus": "38% center",
+      "headline": "Midday at the pool", "sub": "Brookstone Village's pool is open to guests in season." },
+    { "label": "6 PM", "time": "6:00 PM", "mood": "evening", "photo": "photos/great-room.jpg", "focus": "30% center",
+      "headline": "Everyone at one table", "sub": "Kitchen, dining and living share one vaulted room." },
+    { "label": "8 PM", "time": "8:00 PM", "mood": "dusk", "photo": "photos/living.jpg", "focus": "22% center",
+      "headline": "Movie night by the fire", "sub": "A stone fireplace under the high wood ceilings." },
+    { "label": "10 PM", "time": "10:00 PM", "mood": "night", "photo": "photos/hot-tub.jpg", "focus": "62% center",
+      "headline": "Last stop: the hot tub", "sub": "A covered hot tub on the lower deck, facing the woods." }
+  ],
+  "closing": {
+    "eyebrow": "Honey Bear Lodge • For sale",
+    "facts": ["4 bedrooms", "3 full baths", "2,600+ sq ft", "3 levels", "Game room", "Sold turnkey"],
+    "button": "Ask us for details",
+    "who": "The Mount LeConte Team"
+  }
+}
