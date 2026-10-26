@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visionox</title>
+<meta name="description" content="Visionox coaches teams to use AI on their own real work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #f6f7fb; --surface: #ffffff; --ink: #14203a; --muted: #56607a; --line: #dde2ee;
+  --navy: #1b2a52; --accent: #f2c230; --accent-ink: #14203a;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-body: "Source Sans 3", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1526; --surface: #172038; --ink: #e8ecf6; --muted: #a3acc4; --line: #2a3554;
+    --navy: #c9d4f2; --accent: #f2c230; --accent-ink: #14203a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1526; --surface: #172038; --ink: #e8ecf6; --muted: #a3acc4; --line: #2a3554;
+  --navy: #c9d4f2; --accent: #f2c230; --accent-ink: #14203a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 18px/1.6 var(--font-body); }
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
+.logo { font: 700 22px var(--font-display); color: var(--navy); text-decoration: none; }
+nav a { color: var(--muted); text-decoration: none; margin-left: 20px; font-weight: 600; }
+nav a:hover { color: var(--ink); }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; color: var(--navy); }
+h1 { font-size: clamp(36px, 6vw, 60px); margin: 48px 0 16px; }
+.lede { font-size: 21px; color: var(--muted); max-width: 640px; }
+.btn { display: inline-block; background: var(--accent); color: var(--accent-ink); font-weight: 600;
+  padding: 14px 24px; border-radius: 8px; text-decoration: none; margin-top: 16px; }
+section { padding: 56px 0; border-top: 1px solid var(--line); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
+.card h3 { margin-top: 0; }
+.card p { color: var(--muted); margin-bottom: 0; }
+ol.steps { padding-left: 20px; } ol.steps li { margin-bottom: 10px; }
+footer { padding: 32px 0 48px; color: var(--muted); font-size: 15px; border-top: 1px solid var(--line); }
+@media (max-width: 520px) { nav a { margin-left: 12px; font-size: 15px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="logo" href="#">Visionox</a>
+    <nav><a href="#what">What we do</a><a href="#how">How it works</a><a href="#contact">Contact</a></nav>
+  </header>
+
+  <h1>AI that works on your real work.</h1>
+  <p class="lede">Visionox coaches teams to use AI on the tasks they already do every week. No jargon. You leave each session with something you keep.</p>
+  <a class="btn" href="#contact" style="margin-bottom:56px">Book a free call</a>
+
+  <section id="what">
+    <h2>What we do</h2>
+    <div class="grid">
+      <div class="card"><h3>Team AI Program</h3><p>Four 60-minute sessions. Your team learns how AI works, automates the busywork, and builds tools that fit how you run.</p></div>
+      <div class="card"><h3>Real estate content</h3><p>Listing carousels, property videos, and weekly market reports, written in your team's own voice.</p></div>
+      <div class="card"><h3>AI integration</h3><p>We find where AI saves your staff time, set it up, and show everyone how to use it.</p></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><strong>A free call.</strong> We talk about your week and where the time goes.</li>
+      <li><strong>A plan.</strong> We pick the two or three tasks that will pay off first.</li>
+      <li><strong>Hands-on sessions.</strong> Your team builds the tools with us, on their own work.</li>
+    </ol>
+  </section>
+
+  <section id="contact">
+    <h2>Let's talk</h2>
+    <p class="lede">Tell us a little about your team and we'll set up a time.</p>
+    <a class="btn" href="mailto:hello@example.com">Email Visionox</a>
+  </section>
+
+  <footer>© 2026 Visionox</footer>
+</div>
+</body>
+</html>
